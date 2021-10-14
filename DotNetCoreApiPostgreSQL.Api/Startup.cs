@@ -1,3 +1,4 @@
+using DotNetCoreApiPostgreSQL.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace DotNetCoreApiPostgreSQL.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddOpenApi();
             services.AddControllers();
         }
 
@@ -29,6 +30,7 @@ namespace DotNetCoreApiPostgreSQL.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.ConfigureOpenApi();
 
             app.UseRouting();
 
