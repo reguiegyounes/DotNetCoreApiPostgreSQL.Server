@@ -1,4 +1,5 @@
 using DotNetCoreApiPostgreSQL.Api.Extensions;
+using DotNetCoreApiPostgreSQL.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ namespace DotNetCoreApiPostgreSQL.Api
 {
     public class Startup
     {
+        public readonly string corsPolicy = "AllowAllOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -19,6 +21,21 @@ namespace DotNetCoreApiPostgreSQL.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentityApp()
+                    .ConfigureWeakPassword();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: corsPolicy,
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                    });
+            });
+
+            services.AddApiDbContext(Configuration);
             services.AddOpenApi();
             services.AddControllers();
         }
@@ -33,6 +50,8 @@ namespace DotNetCoreApiPostgreSQL.Api
             app.ConfigureOpenApi();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

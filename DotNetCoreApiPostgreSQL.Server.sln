@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreApiPostgreSQL.Api", "DotNetCoreApiPostgreSQL.Api\DotNetCoreApiPostgreSQL.Api.csproj", "{D4C8079A-6A23-4BAE-BB01-4F35F9CF3BC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreApiPostgreSQL.Core", "DotNetCoreApiPostgreSQL.Core\DotNetCoreApiPostgreSQL.Core.csproj", "{75E3A609-215B-4D41-AA2B-7BE0B7975C16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreApiPostgreSQL.Data", "DotNetCoreApiPostgreSQL.Data\DotNetCoreApiPostgreSQL.Data.csproj", "{998DBD8E-36A0-4DB1-A648-4F6CEFE3C061}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{D4C8079A-6A23-4BAE-BB01-4F35F9CF3BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4C8079A-6A23-4BAE-BB01-4F35F9CF3BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4C8079A-6A23-4BAE-BB01-4F35F9CF3BC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75E3A609-215B-4D41-AA2B-7BE0B7975C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75E3A609-215B-4D41-AA2B-7BE0B7975C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75E3A609-215B-4D41-AA2B-7BE0B7975C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75E3A609-215B-4D41-AA2B-7BE0B7975C16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{998DBD8E-36A0-4DB1-A648-4F6CEFE3C061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{998DBD8E-36A0-4DB1-A648-4F6CEFE3C061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{998DBD8E-36A0-4DB1-A648-4F6CEFE3C061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{998DBD8E-36A0-4DB1-A648-4F6CEFE3C061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
