@@ -1,11 +1,15 @@
 ﻿using DotNetCoreApiPostgreSQL.Core.ApiModels;
+using DotNetCoreApiPostgreSQL.Core.Interfaces;
 using DotNetCoreApiPostgreSQL.Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DotNetCoreApiPostgreSQL.Api.Controllers
@@ -16,11 +20,15 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IJwtService _jwtService;
 
-        public AuthController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager)
+       
+
+        public AuthController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IJwtService jwtService)
         {
             this._signInManager = signInManager;
             this._userManager = userManager;
+            this._jwtService = jwtService;
         }
 
         [HttpPost(nameof(CheckEmail))]
@@ -60,11 +68,38 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
             return response;
         }
 
+        [HttpPost(nameof(SignIn))]
+        public async Task<ApiResponse<object>> SignIn(SignUpRequest request)
+        {
+            var response = new ApiResponse<object>();
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                response.AddError("email doesn't exist.");
+                return response;
+            }
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password,false,false);
+            if (!result.Succeeded)
+            {
+                response.AddError("password incorrect.");
+                return response;
+            }
+            
+            response.Data=new {Token=_jwtService.GenerateAccessToken(
+                    new List<Claim> {
+                        new Claim("IdUser",user.Id),
+                    }
+                )};
+
+            
+            return response;
+        }
+
         #region Private Helper
         private async Task<bool> CheckEmailExists(string email)
         {
-            var result = await _userManager.FindByEmailAsync(email);
-            if (result == null)
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
             {
                 return false;
             }
@@ -73,6 +108,7 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
                 return true;
             }
         }
+       
         #endregion
     }
 }

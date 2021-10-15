@@ -35,6 +35,7 @@ namespace DotNetCoreApiPostgreSQL.Api
                     });
             });
 
+            services.AddJwtBearerAuthentication(Configuration);
             services.AddApiDbContext(Configuration);
             services.AddOpenApi();
             services.AddControllers();
@@ -52,6 +53,8 @@ namespace DotNetCoreApiPostgreSQL.Api
             app.UseRouting();
 
             app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
