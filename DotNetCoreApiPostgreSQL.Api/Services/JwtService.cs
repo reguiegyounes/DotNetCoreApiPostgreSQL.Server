@@ -20,7 +20,7 @@ namespace DotNetCoreApiPostgreSQL.Api.Services
             this._configuration = configuration;
             this._jwtOptions = _configuration.GetSection("Jwt").Get<JwtOptions>();
         }
-        public string GenerateAccessToken(List<Claim> claims)
+        public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
             
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));

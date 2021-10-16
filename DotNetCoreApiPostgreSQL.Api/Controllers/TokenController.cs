@@ -1,11 +1,10 @@
-﻿using DotNetCoreApiPostgreSQL.Core.ApiModels;
+﻿using DotNetCoreApiPostgreSQL.Api.Extensions;
+using DotNetCoreApiPostgreSQL.Core.ApiModels;
 using DotNetCoreApiPostgreSQL.Core.Interfaces;
 using DotNetCoreApiPostgreSQL.Core.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -31,7 +30,7 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
         {
             var response = new ApiResponse<object>();
             var princibles = _jwtService.GetClaimsFromExpiredToken(request.AccessToken);
-            var idUser=princibles.Claims.FirstOrDefault(claim => claim.Type == "IdUser").Value;
+            var idUser=princibles.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
             var user =await _userManager.FindByIdAsync(idUser);
 
             if (user==null)
@@ -43,10 +42,7 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
                 return BadRequest("Inavalid refresh token");
             }
 
-            var claims=new List<Claim> {
-                new Claim(ClaimTypes.Name,user.UserName),
-                new Claim("IdUser",user.Id)
-            };
+            var claims= await user.GetClaims(_userManager);
             var refreshToken = _jwtService.GenerateRefreshToken();
             response.Data = new {
                 AccessToken = _jwtService.GenerateAccessToken(claims),
@@ -61,7 +57,7 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
         [Authorize]
         public async Task<ActionResult> Revoke()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _userManager.GetUserAsync(User);
             user.RefreshToken = null;
             await _userManager.UpdateAsync(user);
             return Ok();

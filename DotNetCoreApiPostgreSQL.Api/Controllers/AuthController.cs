@@ -1,15 +1,11 @@
-﻿using DotNetCoreApiPostgreSQL.Core.ApiModels;
+﻿using DotNetCoreApiPostgreSQL.Api.Extensions;
+using DotNetCoreApiPostgreSQL.Core.ApiModels;
 using DotNetCoreApiPostgreSQL.Core.Interfaces;
 using DotNetCoreApiPostgreSQL.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DotNetCoreApiPostgreSQL.Api.Controllers
@@ -85,10 +81,7 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
                 return response;
             }
 
-            var claims = new List<Claim> {
-                new Claim(ClaimTypes.Name,user.UserName),
-                new Claim("IdUser",user.Id)
-            };
+            var claims = await user.GetClaims(_userManager);
             var refreshToken = _jwtService.GenerateRefreshToken();
             response.Data = new
             {
