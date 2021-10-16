@@ -10,5 +10,7 @@ namespace DotNetCoreApiPostgreSQL.Core.Interfaces
     public interface IJwtService
     {
         string GenerateAccessToken(List<Claim> claims);
+        string GenerateRefreshToken();
+        ClaimsPrincipal GetClaimsFromExpiredToken(string token);
     }
 }

@@ -84,14 +84,20 @@ namespace DotNetCoreApiPostgreSQL.Api.Controllers
                 response.AddError("password incorrect.");
                 return response;
             }
-            
-            response.Data=new {Token=_jwtService.GenerateAccessToken(
-                    new List<Claim> {
-                        new Claim("IdUser",user.Id),
-                    }
-                )};
 
-            
+            var claims = new List<Claim> {
+                new Claim(ClaimTypes.Name,user.UserName),
+                new Claim("IdUser",user.Id)
+            };
+            var refreshToken = _jwtService.GenerateRefreshToken();
+            response.Data = new
+            {
+                AccessToken = _jwtService.GenerateAccessToken(claims),
+                RefreshToken = refreshToken
+            };
+            user.RefreshToken = refreshToken;
+            await _userManager.UpdateAsync(user);
+
             return response;
         }
 
